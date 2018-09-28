@@ -10,3 +10,4 @@ export const winningCombinations = [
   [0, 4, 8],
   [2, 4, 6]
 ]
+export const DEFAULT_GRID_SIZE = 3

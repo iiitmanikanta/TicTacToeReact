@@ -2,7 +2,7 @@ import styled from 'react-emotion'
 
 export const GameBoard = styled(`div`)`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: ${props => `repeat(${props.gridSize}, 1fr)`};
   grid-gap: 10px;
   width: 50%;
   margin: auto;
