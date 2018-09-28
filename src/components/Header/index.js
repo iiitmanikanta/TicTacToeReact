@@ -23,7 +23,7 @@ class Header extends Component {
             <HomeIcon onClick={this.onHomeClick} />
           </IconButton>
           <Title variant="title" color="inherit">
-            React App
+            Tic Tac Toe
           </Title>
         </Toolbar>
       </AppBar>
