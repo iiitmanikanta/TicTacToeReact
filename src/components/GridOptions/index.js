@@ -12,7 +12,7 @@ class GridOptions extends Component {
     const { gridOptions } = this.state
     return gridOptions.map(size => {
       return (
-        <option value={size}>
+        <option value={size} key={size}>
           {size} x {size}
         </option>
       )

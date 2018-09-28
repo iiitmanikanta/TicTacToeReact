@@ -7,6 +7,7 @@ import {
   PLAYER_X,
   DEFAULT_GRID_SIZE
 } from '../../constants/AppConstants'
+import { getGridArray, winningCombinations } from '../../utils/AppUtils'
 import {
   GameBoard,
   GameStatus,
@@ -20,21 +21,12 @@ class Home extends Component {
     this.resetGameData()
   }
 
-  getGridArray = gridSize => {
-    const noOfBlocks = gridSize * gridSize
-    const grid = []
-    for (let i = 0; i < noOfBlocks; i++) {
-      grid.push('')
-    }
-    return grid
-  }
-
   resetGameData = (gridSize = DEFAULT_GRID_SIZE) => {
     this.setState({
       gridSize: gridSize,
       isGameCompleted: false,
       isGameDraw: false,
-      board: this.getGridArray(gridSize),
+      board: getGridArray(gridSize),
       currentUser: PLAYER_X
     })
   }
@@ -58,61 +50,11 @@ class Home extends Component {
       })
     }
   }
-  winningCombinations = gridSize => {
-    const positions = []
-    let count = 0
-    let temp = []
-    for (let i = 1; i <= gridSize * gridSize; i++) {
-      temp.push(count)
-      if (i % gridSize === 0) {
-        positions.push(temp)
-        temp = []
-      }
-      count++
-    }
-
-    const combinations = []
-    // for rows
-    for (let i = 0; i < gridSize; i++) {
-      let combination = []
-      for (let j = 0; j < gridSize; j++) {
-        combination.push(positions[i][j])
-      }
-      combinations.push(combination)
-    }
-
-    // for cols
-    for (let i = 0; i < gridSize; i++) {
-      let combination = []
-      for (let j = 0; j < gridSize; j++) {
-        combination.push(positions[j][i])
-      }
-      combinations.push(combination)
-    }
-
-    // for forward diagonal
-    let combination = []
-    for (let i = 0; i < gridSize; i++) {
-      combination.push(positions[i][i])
-    }
-    combinations.push(combination)
-
-    // for backward diagonal
-    combination = []
-    let k = gridSize - 1
-    for (let i = 0; i < gridSize; i++) {
-      combination.push(positions[i][k])
-      k -= 1
-    }
-    combinations.push(combination)
-
-    return combinations
-  }
 
   checkTheGameResult = () => {
     const { board, gridSize } = this.state
-    const winningCombinations = this.winningCombinations(gridSize)
-    return winningCombinations.find(combination => {
+    const possibleWinningCombinations = winningCombinations(gridSize)
+    return possibleWinningCombinations.find(combination => {
       let count = 0
       if (board[combination[0]] !== '') {
         count++
