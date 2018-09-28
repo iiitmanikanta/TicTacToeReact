@@ -6,7 +6,7 @@ import {
   PLAYER_X,
   winningCombinations
 } from '../../constants/AppConstants'
-import { GameBoard, Description } from './styledComponents'
+import { GameBoard, Description, ResetButton } from './styledComponents'
 
 @observer
 class Home extends Component {
@@ -18,6 +18,15 @@ class Home extends Component {
       board: ['', '', '', '', '', '', '', '', ''],
       currentUser: PLAYER_X
     }
+  }
+
+  resetGameData = () => {
+    this.setState({
+      isGameCompleted: false,
+      isGameDraw: false,
+      board: ['', '', '', '', '', '', '', '', ''],
+      currentUser: PLAYER_X
+    })
   }
 
   onSquareClick = squarePosition => {
@@ -82,6 +91,9 @@ class Home extends Component {
               ? `Game is Draw`
               : `It's turn for Player - ${currentUser}`}
         </Description>
+        {isGameCompleted || isGameDraw ? (
+          <ResetButton onClick={this.resetGameData}>Start New Game</ResetButton>
+        ) : null}
       </div>
     )
   }

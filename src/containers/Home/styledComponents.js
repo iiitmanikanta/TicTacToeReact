@@ -16,3 +16,14 @@ export const Description = styled(`div`)`
   font-size: 16px;
   margin-left: 10px;
 `
+export const ResetButton = styled(`button`)`
+  background-color: #ff5e00;
+  outline: none;
+  border: none;
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 10px;
+`
