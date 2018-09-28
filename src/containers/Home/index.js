@@ -1,28 +1,23 @@
 import React, { Component } from 'react'
 import { observer } from 'mobx-react'
 import Square from '../../components/Square'
+import GridOptions from '../../components/GridOptions'
 import {
   PLAYER_O,
   PLAYER_X,
   DEFAULT_GRID_SIZE
 } from '../../constants/AppConstants'
-import { GameBoard, Description, ResetButton } from './styledComponents'
+import {
+  GameBoard,
+  GameStatus,
+  ResetButton,
+  MainContainer
+} from './styledComponents'
 
 @observer
 class Home extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      gridSize: DEFAULT_GRID_SIZE,
-      isGameCompleted: false,
-      isGameDraw: false,
-      board: this.getGridArray(DEFAULT_GRID_SIZE),
-      currentUser: PLAYER_X
-    }
-  }
-
   componentWillMount = () => {
-    // initializing grid
+    this.resetGameData()
   }
 
   getGridArray = gridSize => {
@@ -34,12 +29,12 @@ class Home extends Component {
     return grid
   }
 
-  resetGameData = () => {
+  resetGameData = (gridSize = DEFAULT_GRID_SIZE) => {
     this.setState({
-      gridSize: DEFAULT_GRID_SIZE,
+      gridSize: gridSize,
       isGameCompleted: false,
       isGameDraw: false,
-      board: this.getGridArray(DEFAULT_GRID_SIZE),
+      board: this.getGridArray(gridSize),
       currentUser: PLAYER_X
     })
   }
@@ -75,7 +70,7 @@ class Home extends Component {
       }
       count++
     }
-    console.log('positions', positions)
+
     const combinations = []
     // for rows
     for (let i = 0; i < gridSize; i++) {
@@ -103,32 +98,39 @@ class Home extends Component {
     combinations.push(combination)
 
     // for backward diagonal
-    // combination = []
-    // let x = 0
-    // for (let i = gridSize - 1; i <= 0; i--) {
-    //   combination.push(positions[x])
-    //   x += 1
-    // }
-    // combinations.push(combination)
-    // it is in midddle sorry for that
-    console.log('combinations', combinations)
+    combination = []
+    let k = gridSize - 1
+    for (let i = 0; i < gridSize; i++) {
+      combination.push(positions[i][k])
+      k -= 1
+    }
+    combinations.push(combination)
+
     return combinations
   }
+
   checkTheGameResult = () => {
     const { board, gridSize } = this.state
     const winningCombinations = this.winningCombinations(gridSize)
     return winningCombinations.find(combination => {
-      if (
-        board[combination[0]] !== '' &&
-        board[combination[0]] === board[combination[1]] &&
-        board[combination[0]] === board[combination[2]]
-      ) {
+      let count = 0
+      if (board[combination[0]] !== '') {
+        count++
+        for (let i = 1; i < gridSize; i++) {
+          if (board[combination[0]] === board[combination[i]]) {
+            count++
+          }
+        }
+      }
+
+      if (count === gridSize) {
         return true
       } else {
         return false
       }
     })
   }
+
   showGameBoard = () => {
     const { board } = this.state
     return board.map((value, index) => {
@@ -144,37 +146,30 @@ class Home extends Component {
   }
   handleChange = event => {
     const gridSize = Number(event.target.value)
-    this.setState({
-      gridSize,
-      board: this.getGridArray(gridSize)
-    })
+    this.resetGameData(gridSize)
   }
   render() {
     const { currentUser, isGameCompleted, isGameDraw, gridSize } = this.state
-    console.log('this.state', this.state, this.winningCombinations(3))
     return (
-      <div>
-        <br />
-        Select the Grid Size: {` `}
-        <select value={gridSize} onChange={this.handleChange}>
-          <option value={3}>3 x 3</option>
-          <option value={4}>4 x 4</option>
-          <option value={5}>5 x 5</option>
-        </select>
+      <MainContainer>
+        <GridOptions handleChange={this.handleChange} gridSize={gridSize} />
         <GameBoard isGameCompleted={isGameCompleted} gridSize={gridSize}>
           {this.showGameBoard()}
         </GameBoard>
-        <Description>
+        <GameStatus>
           {isGameCompleted
-            ? `You Won the game - ${currentUser}`
+            ? `Player - ${currentUser} Won the game`
             : isGameDraw
               ? `Game is Draw`
               : `It's turn for Player - ${currentUser}`}
-        </Description>
-        {isGameCompleted || isGameDraw ? (
-          <ResetButton onClick={this.resetGameData}>Start New Game</ResetButton>
-        ) : null}
-      </div>
+          <br />
+          {isGameCompleted || isGameDraw ? (
+            <ResetButton onClick={() => this.resetGameData()}>
+              Start New Game
+            </ResetButton>
+          ) : null}
+        </GameStatus>
+      </MainContainer>
     )
   }
 }
