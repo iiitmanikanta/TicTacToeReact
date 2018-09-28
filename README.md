@@ -16,7 +16,7 @@ python -m SimpleHTTPServer
 
 ## Running Unit test cases
 
-This MVP has 3 basic unit test cases. run the follwing command from root directory to check the tests.
+This MVP has 1 basic unit test case. run the follwing command from root directory to check the tests.
 
 ```
 yarn test src/App.test.js
